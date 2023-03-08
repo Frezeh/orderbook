@@ -1,30 +1,30 @@
 import Image from "next/image";
-import React, { ChangeEvent, SetStateAction, useState } from "react";
+import React, { ChangeEvent, SetStateAction, useContext, useState } from "react";
 
 import Cancel from "../assets/icons/cancel.svg";
 import Search from "../assets/icons/search.svg";
+import { OrderBookContext } from "../utils/context";
 import { Tokens } from "../utils/data";
 import { Token } from "../utils/types";
 
 type Props = {
   set: React.Dispatch<SetStateAction<boolean>>;
-  setReceiveToken: React.Dispatch<SetStateAction<Token | undefined>>;
-  setPayToken: React.Dispatch<SetStateAction<Token | undefined>>;
   title: string;
   type: "You Pay" | "You Receive"
 };
 
 function Modal(props: Props) {
+  const { setPayToken, setReceiveToken } = useContext(OrderBookContext);
   const [tokens, setTokens] = useState(Tokens);
   const [value, setValue] = useState("");
 
   const handleClick = (token: Token) => {
     if (props.type === "You Pay") {
-      props.setPayToken(token)
+      setPayToken(token)
     }
 
     if (props.type === "You Receive") {
-      props.setReceiveToken(token)
+      setReceiveToken(token)
     }
 
     props.set(false);
@@ -49,7 +49,7 @@ function Modal(props: Props) {
     <>
       <div className="left-0 top-0 right-0 absolute justify-center items-center rounded-[20px] flex z-50 outline-none focus:outline-none">
         <div>
-          <div className="border-0 rounded-lg shadow-lg flex flex-col w-[420px] max-w-[420px] h-[456px] bg-white outline-none focus:outline-none">
+          <div className="border-0 rounded-lg shadow-lg flex flex-col w-[420px] max-w-[420px] mobile:w-[400px] mobile:h-[490px] h-[456px] bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between px-5 pt-5 rounded-t">
               <h3 className="text-xl font-semibold">{props.title}</h3>
               <button

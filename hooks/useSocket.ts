@@ -3,7 +3,7 @@ import { OrderBookContext } from "../utils/context";
 import { Socket } from "../utils/types";
 
 function useSocket() {
-  const { state, getUpdate } = useContext(OrderBookContext);
+  const { data, getUpdate, state } = useContext(OrderBookContext);
 
   const url =
     "https://api.0x.org/orderbook/v1?quoteToken=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&baseToken=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
@@ -14,13 +14,13 @@ function useSocket() {
       const { payload } = message;
       getUpdate(payload);
     },
-    [state]
+    [data]
   );
 
   useEffect(() => {
     const ws = new WebSocket(websocketUrl);
     ws.onopen = () => {
-      console.log("Web socket connected");
+      //console.log("Web socket connected");
       ws.send(
         JSON.stringify({
           type: "subscribe",
@@ -31,8 +31,8 @@ function useSocket() {
     };
 
     ws.onmessage = (event) => {
-      console.log(event);
       const data = JSON.parse(event.data);
+      //console.log(data)
       parseMessage(data);
     };
 

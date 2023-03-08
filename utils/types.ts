@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface ApiResponse {
   bids: Bids;
   asks: Asks;
@@ -104,8 +106,25 @@ export interface MetaData3 {
   state: string;
 }
 
+export type Data = {
+  price: number;
+  quantity: number;
+  total: number;
+};
+
+export type ParsedData = {
+  bids: Data[];
+  asks: Data[];
+};
+
 export type OrderBook = {
-  state?: ApiResponse
+  state?: ApiResponse;
+  data: ParsedData;
+  isLoading: boolean;
   getCurrentState: () => Promise<void>;
   getUpdate: (payload: Record[]) => void;
+  payToken: Token | undefined;
+  receiveToken: Token | undefined;
+  setPayToken: Dispatch<SetStateAction<Token | undefined>>;
+  setReceiveToken: Dispatch<SetStateAction<Token | undefined>>;
 };

@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { forwardRef, InputHTMLAttributes, useState } from "react";
+import { forwardRef, InputHTMLAttributes, useContext, useState } from "react";
 
 import Dropdown from "../assets/icons/drop-down.svg";
-import { Token } from "../utils/types";
+import { OrderBookContext } from "../utils/context";
 import Modal from "./Modal";
 
 type HTMLInputType = InputHTMLAttributes<HTMLInputElement>;
@@ -14,9 +14,8 @@ interface Props extends HTMLInputType {
 
 function TextField(props: Props, ref: any) {
   const { label, balance, ...rest } = props;
+  const { payToken, receiveToken } = useContext(OrderBookContext);
   const [showModal, setShowModal] = useState(false);
-  const [payToken, setPayToken] = useState<Token>();
-  const [receiveToken, setReceiveToken] = useState<Token>();
 
   return (
     <div className="max-w-full px-5">
@@ -32,7 +31,7 @@ function TextField(props: Props, ref: any) {
           className="flex cursor-pointer gap-2 hover:bg-[#f7f7ff] hover:rounded-md p-1 ease-linear transition-all duration-150"
           onClick={() => setShowModal(true)}
         >
-          {payToken && (
+          {label === "You Pay" && payToken?.imageUrl && (
             <div className="w-6 mt-1">
               <Image
                 src={payToken?.imageUrl}
@@ -44,7 +43,7 @@ function TextField(props: Props, ref: any) {
             </div>
           )}
 
-          {receiveToken && (
+          {label === "You Receive" && receiveToken?.imageUrl && (
             <div className="w-6 mt-1">
               <Image
                 src={receiveToken?.imageUrl}
@@ -62,15 +61,9 @@ function TextField(props: Props, ref: any) {
           </p>
           <Image src={Dropdown} alt="currency" className="" />
         </div>
-        {showModal && (
-          <Modal
-            set={setShowModal}
-            title={label}
-            setPayToken={setPayToken}
-            setReceiveToken={setReceiveToken}
-            type={label}
-          />
-        )}
+
+        {showModal && <Modal set={setShowModal} title={label} type={label} />}
+
         <div className="w-[150px] px-[16px] y-[10px] rounded-[12px] border border-[#0000001F] bg-[#f7f7ff] focus-within:border-[#706eff] transition-all">
           <div>
             <input
