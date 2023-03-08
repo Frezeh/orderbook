@@ -16,11 +16,6 @@ function OrderBook({ back }: { back: VoidFunction }) {
   const { getUpdate, data, isLoading } = useContext(OrderBookContext);
   const websocketUrl = "wss://api.0x.org/orderbook/v1";
 
-  // useEffect(() => {
-  //   getCurrentState();
-  // }, []);
-
-  //useSocket();
   const { sendJsonMessage, getWebSocket } = useWebSocket(websocketUrl, {
     onOpen: () => console.log("WebSocket connection opened."),
     onClose: () => console.log("WebSocket connection closed."),

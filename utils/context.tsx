@@ -64,15 +64,6 @@ export function OrderBookProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     getCurrentState();
   }, []);
-  // const getUpdate = (payload: Record[]) => {
-  // setState({
-  //   ...state!,
-  //   asks: {
-  //     ...state!.asks,
-  //     records: [...state!.asks?.records!, ...payload],
-  //   },
-  // });
-  // };
 
   const priceExists = (price: number) => {
     return data[orderType].some((data) => data.price === price);
@@ -113,18 +104,16 @@ export function OrderBookProvider({ children }: { children: ReactNode }) {
 
     let orderLength = state![orderType]?.records.length;
 
-    // let socketData = {
-    //   [orderType]:
-    //     orderType === "asks" ? addAskData(payload) : addBidData(payload),
-    // };
     let socketData =
       orderType === "asks" ? addAskData(payload) : addBidData(payload);
-      console.log("price", socketData);
-    // // If new quantity is zero - delete the order for that price level
+      
+      console.log("price", socketData[0].price);
+    
+      // // If new quantity is zero - delete the order for that price level
     if (socketData[0].quantity === 0 && orderLength > ORDER_LENGTH) {
       removeOrder(socketData[0].price, data);
     } else {
-      // If the price level exists and the quantity is not zero, update it
+      // If the price level exists and the quantity is not zero, update the order book
       if (priceExists(socketData[0].price)) {
         console.log("data", "Price dey oh");
 
